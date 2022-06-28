@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.demo.TestUtils;
 import com.example.demo.model.persistence.Cart;
+import com.example.demo.model.persistence.Item;
 import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.persistence.repositories.ItemRepository;
@@ -79,25 +81,28 @@ public class CartControllerTest {
         assertEquals(HttpStatus.OK, removeCart.getStatusCode());
     }
     
-    public User createUser() throws Exception{
-        when(encoder.encode("shank@1234")).thenReturn("thisIsHashed");
-        CreateUserRequest req = new CreateUserRequest();
-        req.setUsername("shank");
-        req.setPassword("shank@1234");
-        req.setConfirmPassword("shank@1234");
-
-        ResponseEntity<User> response = userController.createUser(req);
-        
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCodeValue());
-        
-        User user = response.getBody();
-        
-        assertNotNull(user);
-        assertEquals(0, user.getId());
-        assertEquals("shank", user.getUsername());
-        assertEquals("thisIsHashed", user.getPassword());
+    public static User createUser() {
+        User user = new User();
+        user.setId(Long.valueOf(1));
+        user.setUsername("shank");
+        user.setPassword("testPassword");
+        user.setCart(createCart());
         return user;
+    }
+    
+    public static Cart createCart() {
+        Cart cart = new Cart();
+        cart.setId(Long.valueOf(1));
+        cart.addItem(createItem());
+        return cart;
+    }
+
+    public static Item createItem(){
+        Item item = new Item();
+        item.setId(Long.valueOf(1));
+        item.setDescription("shoes");
+        item.setPrice(BigDecimal.valueOf(7,05));
+        return item;
     }
     
     private ModifyCartRequest modifyCart(User user) {
