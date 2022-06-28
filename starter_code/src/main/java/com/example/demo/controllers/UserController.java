@@ -60,7 +60,7 @@ public class UserController {
 		user.setCart(cart);
 		user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
 		userRepository.save(user);
-		log.info("User creation for " +  createUserRequest.getUsername() + " successfully.");
+		log.info("User creation successfull for " +  createUserRequest.getUsername() + ".");
 		return ResponseEntity.ok(user);
 	}
 	
