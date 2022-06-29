@@ -1,5 +1,7 @@
 package com.example.demo.model.persistence;
 
+import java.security.SecureRandom;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +14,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.example.demo.utils.AuthUtils;
 
 @Entity
 @Table(name = "user")
@@ -36,7 +37,7 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 	
-	byte[] salt = AuthUtils.createSalt();
+	byte[] salt = createSalt();
 	
 	public Cart getCart() {
 		return cart;
@@ -76,5 +77,12 @@ public class User {
 
 	public void setSalt(byte[] salt) {
 		this.salt = salt;
+	}
+	
+	public static byte[] createSalt() {
+		SecureRandom random = new SecureRandom();
+		byte[] salt = new byte[16];
+		random.nextBytes(salt);
+		return salt;
 	}
 }
